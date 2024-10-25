@@ -5,9 +5,9 @@ public class Main {
         TwitterLogin login = new TwitterLogin(bot);
         TwitterDataCollector collector = new TwitterDataCollector(bot);
 //        TwitterD
-        String username = "caohuythinh@gmail.com";
-        String user = "ThnhCaoHuy";
-        String password = "mancity1st";
+        String username = "" // nhập tên đăng nhập
+        String user = "" // nhập tên user (nếu bị check)
+        String password = "" // nhập passwd
 
         // Đăng nhập vào Twitter
         login.login(username, user, password);
