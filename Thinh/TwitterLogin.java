@@ -25,6 +25,29 @@ public class TwitterLogin {
         this.wait = bot.getWait();
     }
 
+    public void login(String username, String password) {
+        try {
+            // Mở trang đăng nhập Twitter
+            String url = "https://twitter.com/i/flow/login";
+            driver.get(url);
+
+            // Nhập tên đăng nhập
+            WebElement usernameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input[autocomplete='username']")));
+            usernameInput.sendKeys(username);
+            usernameInput.sendKeys(org.openqa.selenium.Keys.ENTER);
+            // Nhập tên tài khoản (nếu cần)
+            // Nhập mật khẩu
+            WebElement passwordInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input[name='password']")));
+            passwordInput.sendKeys(password);
+            passwordInput.sendKeys(org.openqa.selenium.Keys.ENTER);
+
+            // Đợi thêm thời gian để hoàn tất đăng nhập
+            Thread.sleep(5000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void login(String username, String user, String password) {
         try {
             // Mở trang đăng nhập Twitter

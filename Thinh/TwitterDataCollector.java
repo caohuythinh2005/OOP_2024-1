@@ -23,6 +23,11 @@ public class TwitterDataCollector {
 
     }
 
+    public void searchKolFromHashtag(String hashtag) {
+        String searchUrl = "https://x.com/search?q=" + hashtag + "&src=typed_query&f=user";
+        driver.get(searchUrl);
+    }
+
     public void searchHashtag(String hashtag) {
         try {
             // Mở trang tìm kiếm hashtag
