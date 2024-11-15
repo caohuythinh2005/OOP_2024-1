@@ -3,7 +3,6 @@ public class NumberParser {
         input = input.replace(",", "");
         double multiplier = 1.0;
 
-        // Check the suffix and set the multiplier accordingly
         if (input.endsWith("K")) {
             multiplier = 1_000;
             input = input.substring(0, input.length() - 1);
