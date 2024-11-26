@@ -1,8 +1,5 @@
 import org.bouncycastle.crypto.prng.drbg.DualECPoints;
-import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
@@ -10,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.rmi.ssl.SslRMIClientSocketFactory;
+import java.sql.Driver;
 import java.time.Duration;
 
 import java.util.List;
@@ -187,5 +185,63 @@ public class TwitterSimulation {
             System.out.println("Failed to get Likes count");
         }
         return ans;
+    }
+
+    public ArrayList<String> getAllFollowers() {
+        ArrayList<String> arrLinkProfiles = new ArrayList<String>();
+        try {
+            List<WebElement> profiles = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("button[data-testid='UserCell']")));
+            for (int i = 0; i < profiles.size(); i++) {
+                WebElement linkElement = profiles.get(i).findElement(By.cssSelector("a"));
+                String href = linkElement.getAttribute("href");
+                // System.out.println(href);
+                arrLinkProfiles.add(href);
+            }
+        } catch (Exception e) {
+            // System.out.println("Failed to get link");
+        }
+        return arrLinkProfiles;
+    }
+
+    public ArrayList<String> getAllFollowersWithScroll(TwitterBot bot) throws InterruptedException {
+        ArrayList<String> ListFollowers = new ArrayList<String>();
+        JavascriptExecutor js = (JavascriptExecutor) bot.getDriver();
+        for (int i = 0; i < 100; i++) {
+            ArrayList<String> temp = this.getAllFollowers();
+            if (temp.isEmpty()) break;
+            if (!ListFollowers.isEmpty()) {
+                for (String x : temp) {
+                    if (!ListFollowers.contains(x)) {
+                        ListFollowers.add(x);
+                    }
+                }
+            } else ListFollowers = temp;
+            js.executeScript("window.scrollBy(0, 350)");
+        }
+        //Thread.sleep(2000);
+        return ListFollowers;
+    }
+
+
+
+    public static String getUrlFollowers(String username) {
+        return "https://x.com/" + username + "/followers";
+    }
+
+    public void getFollowers(int userIndex) {
+        Actions action = new Actions(driver);
+        try {
+            List<WebElement> profiles = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("button[data-testid='UserCell']")));
+            if (userIndex < profiles.size()) {
+                WebElement linkElement = profiles.get(userIndex).findElement(By.cssSelector("a"));
+                String href = linkElement.getAttribute("href");
+                // System.out.println(href);
+                // System.out.println("Clicked on the profile with userIndex : " + userIndex);
+            } else {
+                System.out.println("Invaild index: " + userIndex);
+            }
+        } catch (Exception e) {
+            System.out.println("Failed to click on the profile, try another userIndex ; " + userIndex);
+        }
     }
 }
