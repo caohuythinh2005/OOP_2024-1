@@ -16,6 +16,15 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class TwitterTweet {
+    public static boolean isNumericManual(String str) {
+        for (char c : str.toCharArray()) {
+            if (!Character.isDigit(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static String getUrlTweet(String username, String id) {
         return "https://x.com/" + username + "/status/" + id;
     }
@@ -33,7 +42,7 @@ public class TwitterTweet {
         ArrayList<String> allTweetsID = new ArrayList<String>();
         JavascriptExecutor js = (JavascriptExecutor) bot.getDriver();
         for (int idx = 0; idx < scrolls + 1; idx++) {
-            Thread.sleep(2000);
+            Thread.sleep(500);
             try {
                 List<WebElement> allCommenters = bot.getWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("article[data-testid='tweet']")));
                 for (WebElement allCommenter : allCommenters) {
@@ -41,11 +50,13 @@ public class TwitterTweet {
                     String href = linkElement.get(3).getAttribute("href");
                     if (href != null) {
                         String id = TwitterTweet.getTweetIDFromUrl(href);
-                        if (allTweetsID.isEmpty()) {
-                            allTweetsID.add(id);
-                        } else {
-                            if (!allTweetsID.contains(id)) {
+                        if (TwitterTweet.isNumericManual(id)) {
+                            if (allTweetsID.isEmpty()) {
                                 allTweetsID.add(id);
+                            } else {
+                                if (!allTweetsID.contains(id)) {
+                                    allTweetsID.add(id);
+                                }
                             }
                         }
                     }
@@ -63,13 +74,15 @@ public class TwitterTweet {
         ArrayList<String> arrCommenters = new ArrayList<String>();
         try {
             for (int idx = 0; idx < scrolls + 1; idx++) {
-                Thread.sleep(2000);
+                Thread.sleep(500);
                 List<WebElement> allCommenters = bot.getWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("article[data-testid='tweet']")));
                 for (int i = 1; i < allCommenters.size(); i++) {
                     WebElement linkElement = allCommenters.get(i).findElement(By.cssSelector("a"));
                     String href = linkElement.getAttribute("href");
-                    if (!arrCommenters.contains(href)) {
-                        arrCommenters.add(href);
+                    assert href != null;
+                    String x = TwitterSimulation.getUserNameFromURL(href);
+                    if (!arrCommenters.contains(x)) {
+                        arrCommenters.add(x);
                     }
                 }
                 js.executeScript("window.scrollBy(0, 200)");

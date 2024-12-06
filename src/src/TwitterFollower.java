@@ -23,7 +23,7 @@ public class TwitterFollower {
         bot.getDriver().get(TwitterFollower.getUrlFollowers(username));
     }
 
-    public static ArrayList<String> getAllFollowers(TwitterBot bot) {
+    private static ArrayList<String> getAllFollowers(TwitterBot bot) {
         ArrayList<String> arrLinkProfiles = new ArrayList<String>();
         try {
             List<WebElement> profiles = bot.getWait().until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("button[data-testid='UserCell']")));

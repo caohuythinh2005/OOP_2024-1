@@ -1,3 +1,4 @@
+package pagerank;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -22,18 +23,18 @@ public class DataLoader {
         return kols;
     }
 
-    public static void main(String[] args) {
-        String filePath = "src\\kol_data.json";
-
-        // Đọc dữ liệu từ file
-        List<KOL> kols = loadKOLsFromJsonFile(filePath);
-
-        if (kols != null) {
-            for (KOL kol : kols) {
-                System.out.println(kol);
-            }
-        } else {
-            System.out.println("Failed to load data.");
-        }
-    }
+//    public static void main(String[] args) {
+//        String filePath = "kol_data.json";
+//
+//        // Đọc dữ liệu từ file
+//        List<KOL> kols = loadKOLsFromJsonFile(filePath);
+//
+//        if (kols != null) {
+//            for (KOL kol : kols) {
+//                System.out.println(kol);
+//            }
+//        } else {
+//            System.out.println("Failed to load data.");
+//        }
+//    }
 }

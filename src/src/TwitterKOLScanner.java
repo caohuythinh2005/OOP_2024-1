@@ -80,23 +80,23 @@ public class TwitterKOLScanner {
     }
 
     private KOL collectUserData(String username) throws InterruptedException {
-        Thread.sleep(1000);
+        Thread.sleep(500);
         TwitterSimulation botSim = new TwitterSimulation();
         TwitterFollower.getFollowersTab(this.bot, username);
-        Thread.sleep(1000);
+        Thread.sleep(500);
         ArrayList<String> arrFollowers = TwitterFollower.getAllFollowersWithScroll(this.bot, this.scrolls);
-        Thread.sleep(2000);
+        Thread.sleep(500);
         System.out.println(arrFollowers.size());
         TwitterTweet.getProfile(this.bot, username);
-        Thread.sleep(2000);
+        Thread.sleep(500);
         ArrayList<String> tweetsID = TwitterTweet.getAllTweetsIDWithScroll(this.bot, this.scrolls);
-        Thread.sleep(2000);
+        Thread.sleep(500);
         System.out.println(tweetsID.size());
         ArrayList<Tweet> tweets = new ArrayList<>();
         for (String id : tweetsID) {
             TwitterTweet.getTweet(bot, username, id);
             ArrayList<String> cmm = TwitterTweet.getAllCommenters(this.bot, this.scrolls);
-            Thread.sleep(1000);
+            Thread.sleep(500);
             tweets.add(new Tweet(username, id, cmm));
         }
         TwitterTweet.getProfile(this.bot, username);

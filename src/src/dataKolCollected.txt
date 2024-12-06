@@ -1,5 +1,3 @@
-blockchain
-ton_blockchain
 ice_blockchain
 ChainPeople
 TienCypress

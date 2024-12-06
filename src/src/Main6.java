@@ -9,7 +9,7 @@ public class Main6 {
         String filePathScanner = "src\\dataKol.txt";
         String filePathSaved= "src\\dataKolCollected.txt";
         String filePath = "src\\kol_data.json";
-        int scrolls = 20;
+        int scrolls = 5;
 
         TwitterKOLScanner obj = new TwitterKOLScanner(filePath, filePathScanner, filePathSaved, username, user, password, scrolls);
         obj.readUsersFromFile();

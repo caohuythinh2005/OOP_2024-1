@@ -1,5 +1,3 @@
-blockchain
-ton_blockchain
 ice_blockchain
 ChainPeople
 TienCypress
@@ -121,7 +119,6 @@ leocyber
 india
 kuntect
 kris
-LeOrbid
 KymCryptoo
 EtheriaCrypto
 CryptoXposure
@@ -231,6 +228,8 @@ Crypto_TownHall
 DrPanteo
 CryptoGirlNova
 cryptodotnew
+blockchain
+ton_blockchain
 cryptopunksnfts
 CaleCrypto
 CryptoKaleo
