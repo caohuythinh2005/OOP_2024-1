@@ -14,12 +14,26 @@ public class BuildWeightedGraph {
                 graph.addEdge(follower, kolName, 1.0);
             }
 
-            // Thêm cạnh từ người bình luận (commenters) đến KOL (chỉ cần thêm 1 lần)
+            
             for (Tweet tweet : kol.getTweets()) {
+            	// Thêm cạnh từ người bình luận (commenters) đến KOL
                 for (String commenter : tweet.getCommenters()) {
-                    graph.addEdge(commenter, kolName, 1.0);
+                	// Bỏ qua nếu commenter là chính KOL
+                    if (!commenter.equals(kolName)) {
+                        graph.addEdge(commenter, kolName, 1.0); // Mỗi comment tăng trọng số 1
+                    }
                 }
+                
+                // Thêm cạnh từ người đăng lại (retweeter) đến KOL
+                for (String retweeter : tweet.getRetweeters()) {
+                	// Bỏ qua nếu retweeter là chính KOL
+                    if (!retweeter.equals(kolName)) {
+                        graph.addEdge(retweeter, kolName, 1.0); // Mỗi retweet tăng trọng số 1
+                    }
+                }
+                
             }
+            
         }
 
 

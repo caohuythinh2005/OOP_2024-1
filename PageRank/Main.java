@@ -6,8 +6,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-import pagerank.RankSaver.KOLRank;
-
 public class Main {
     public static void main(String[] args) {
         String filePath = "kol_data.json";

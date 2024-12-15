@@ -35,14 +35,5 @@ public class RankSaver {
         }
     }
 
-    // Class KOLRank được tái sử dụng từ hàm main
-    public static class KOLRank {
-        String username;
-        double rank;
-
-        public KOLRank(String username, double rank) {
-            this.username = username;
-            this.rank = rank;
-        }
-    }
+    
 }
