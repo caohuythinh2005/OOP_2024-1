@@ -1,41 +1,48 @@
 package pagerank;
-
-import java.util.List;
+import java.util.*;
 
 public class BuildWeightedGraph {
-    public static WeightedGraph buildGraphFromKOLs(List<KOL> kols) {
-        WeightedGraph graph = new WeightedGraph();
 
+    private WeightedGraph graph;
+    private Map<String, Node> nodeCache; // Cache lưu các Node đã tạo
+
+    public BuildWeightedGraph() {
+        this.graph = new WeightedGraph();
+        this.nodeCache = new HashMap<>();
+    }
+
+    // Trả về Node đã tồn tại hoặc tạo Node mới nếu chưa tồn tại
+    private Node getOrCreateNode(String username) {
+        return nodeCache.computeIfAbsent(username, Node::new);
+    }
+
+    public WeightedGraph buildGraph(List<KOL> kols) {
         for (KOL kol : kols) {
-            String kolName = kol.getUsername();
+            Node kolNode = getOrCreateNode(kol.getUsername()); // Node của KOL chính
+            graph.addNode(kolNode);
 
-            // Thêm cạnh từ followers đến KOL
+            // Tính toán dựa trên followers
+            double followerWeight = kol.getNumberOfFollowers();
             for (String follower : kol.getFollowers()) {
-                graph.addEdge(follower, kolName, 1.0);
+                Node followerNode = getOrCreateNode(follower);
+                graph.addEdge(followerNode, kolNode, followerWeight);
             }
 
-            
+            // Xử lý từng tweet của KOL
             for (Tweet tweet : kol.getTweets()) {
-            	// Thêm cạnh từ người bình luận (commenters) đến KOL
+                // Thêm edge từ commenter đến tweet
                 for (String commenter : tweet.getCommenters()) {
-                	// Bỏ qua nếu commenter là chính KOL
-                    if (!commenter.equals(kolName)) {
-                        graph.addEdge(commenter, kolName, 1.0); // Mỗi comment tăng trọng số 1
-                    }
+                    Node commenterNode = getOrCreateNode(commenter);
+                    graph.addEdge(commenterNode, kolNode, 1.0); // Commenter trỏ đến KOL
                 }
-                
-                // Thêm cạnh từ người đăng lại (retweeter) đến KOL
-                for (String retweeter : tweet.getRetweeters()) {
-                	// Bỏ qua nếu retweeter là chính KOL
-                    if (!retweeter.equals(kolName)) {
-                        graph.addEdge(retweeter, kolName, 1.0); // Mỗi retweet tăng trọng số 1
-                    }
-                }
-                
-            }
-            
-        }
 
+                // Thêm edge từ retweeter đến tweet
+                for (String retweeter : tweet.getRetweeters()) {
+                    Node retweeterNode = getOrCreateNode(retweeter);
+                    graph.addEdge(retweeterNode, kolNode, 1.0); // Retweeter trỏ đến KOL
+                }
+            }
+        }
 
         return graph;
     }

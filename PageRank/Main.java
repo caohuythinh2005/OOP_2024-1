@@ -1,5 +1,6 @@
 package pagerank;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -7,30 +8,27 @@ import java.util.List;
 import java.util.Map;
 
 public class Main {
-    public static void main(String[] args) {
-        String filePath = "kol_data.json";
+    public static void main(String[] args) throws IOException {
+        // Tải dữ liệu KOL từ file JSON
+        String jsonFilePath = "kol_data.json";
+        List<KOL> kols = DataLoader.loadKOLsFromJsonFile(jsonFilePath);
 
-        // Load dữ liệu từ file JSON
-        List<KOL> kols = DataLoader.loadKOLsFromJsonFile(filePath);
-
-        if (kols == null || kols.isEmpty()) {
-            System.out.println("No KOL data found!");
-            return;
-        }
-
-        // Xây dựng đồ thị
-        WeightedGraph graph = BuildWeightedGraph.buildGraphFromKOLs(kols);
+        // Xây dựng đồ thị từ danh sách KOL
+        BuildWeightedGraph builder = new BuildWeightedGraph();
+        WeightedGraph graph = builder.buildGraph(kols);
 
         // Tính toán PageRank
-        WeightedPageRank pageRank = new WeightedPageRank(graph, 0.85, 100);
-        Map<String, Double> ranks = pageRank.computePageRank();
+        WeightedPageRank pageRank = new WeightedPageRank(graph);
+
+        Map<Node, Double> ranks = pageRank.computePageRank(100);
 
         // In kết quả chỉ cho các KOL
         System.out.println("\nKOL PageRank:");
         List<KOLRank> kolRankList = new ArrayList<>();
         
         for (KOL kol : kols) {
-        	kolRankList.add(new KOLRank(kol.getUsername(), ranks.getOrDefault(kol.getUsername(), 0.0)));
+            Node node = new Node(kol.getUsername()); // Tạo Node với username
+            kolRankList.add(new KOLRank(kol.getUsername(), ranks.getOrDefault(node, 0.0)));
         }
         
         Collections.sort(kolRankList, new Comparator<KOLRank>() {

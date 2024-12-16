@@ -14,26 +14,23 @@ public class RankSaver {
     public static void saveToCSV(List<KOLRank> kolRanks, String filePath) {
         try (FileWriter writer = new FileWriter(filePath)) {
             // Ghi tiêu đề cột
-            writer.append("Rank,KOL's name,Score\n");
+            writer.append("Rank,Username,Score\n");
 
             // Ghi từng KOL vào file
-            int i = 1;
+            int rank = 1; // Bắt đầu từ rank 1
             for (KOLRank kolRank : kolRanks) {
-                writer.append(String.valueOf(i))
-                	  .append(",")
-                	  .append(kolRank.username)
+                writer.append(String.valueOf(rank))
                       .append(",")
-                      .append(String.valueOf(kolRank.rank))
+                      .append(kolRank.username)
+                      .append(",")
+                      .append(String.format("%.10f", kolRank.rank)) // Điểm rank với 10 chữ số thập phân
                       .append("\n");
-                i++;
+                rank++;
             }
-            i = 1;
 
             System.out.println("KOL ranks saved to " + filePath);
         } catch (IOException e) {
             System.err.println("Error saving to CSV: " + e.getMessage());
         }
     }
-
-    
 }

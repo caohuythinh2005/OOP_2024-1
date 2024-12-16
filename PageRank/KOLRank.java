@@ -10,3 +10,4 @@ public class KOLRank {
         this.rank = rank;
     }
 }
+
