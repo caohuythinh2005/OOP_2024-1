@@ -68,7 +68,7 @@ public class WeightedPageRank {
 
 
 
- // Lấy giá trị PageRank của một node
+    // Lấy giá trị PageRank của một node
     public double getPageRank(Node node) {
         return ranks.getOrDefault(node, 0.0);
     }

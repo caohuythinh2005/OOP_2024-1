@@ -19,6 +19,7 @@ public class BuildWeightedGraph {
     public WeightedGraph buildGraph(List<KOL> kols) {
         for (KOL kol : kols) {
             Node kolNode = getOrCreateNode(kol.getUsername()); // Node của KOL chính
+            kolNode.setType("KOL");
             graph.addNode(kolNode);
 
             // Tính toán dựa trên followers

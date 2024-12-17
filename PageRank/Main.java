@@ -1,44 +1,59 @@
 package pagerank;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        // Tải dữ liệu KOL từ file JSON
-        String jsonFilePath = "kol_data.json";
-        List<KOL> kols = DataLoader.loadKOLsFromJsonFile(jsonFilePath);
+    public static void main(String[] args) {
+    	//Đường dẫn file resrc và file lưu data
+        String inputFilePath = "kol_data.json";
+        String outputFilePath = "kol_ranks.json";
 
-        // Xây dựng đồ thị từ danh sách KOL
-        BuildWeightedGraph builder = new BuildWeightedGraph();
-        WeightedGraph graph = builder.buildGraph(kols);
+        try {
+            // 1. Đọc dữ liệu từ file
+            System.out.println("Loading KOL data...");
+            DataManager<KOL> dataManager = new DataManagerJson<>(inputFilePath, KOL.class);
+            List<KOL> kols = dataManager.readData();
+            System.out.println("Loaded " + kols.size() + " KOLs successfully.");
 
-        // Tính toán PageRank
-        WeightedPageRank pageRank = new WeightedPageRank(graph);
+            // 2. Xây dựng đồ thị từ danh sách KOL
+            System.out.println("Building weighted graph...");
+            BuildWeightedGraph builder = new BuildWeightedGraph();
+            WeightedGraph graph = builder.buildGraph(kols);
+            System.out.println("Graph built successfully. Number of nodes: " + graph.getNodes().size());
 
-        Map<Node, Double> ranks = pageRank.computePageRank(100);
+            // 3. Tính toán PageRank
+            System.out.println("Computing PageRank...");
+            WeightedPageRank pageRank = new WeightedPageRank(graph);
+            Map<Node, Double> ranks = pageRank.computePageRank(100);
+            System.out.println("PageRank computation completed.");
 
-        // In kết quả chỉ cho các KOL
-        System.out.println("\nKOL PageRank:");
-        List<KOLRank> kolRankList = new ArrayList<>();
-        
-        for (KOL kol : kols) {
-            Node node = new Node(kol.getUsername()); // Tạo Node với username
-            kolRankList.add(new KOLRank(kol.getUsername(), ranks.getOrDefault(node, 0.0)));
-        }
-        
-        Collections.sort(kolRankList, new Comparator<KOLRank>() {
-            @Override
-            public int compare(KOLRank o1, KOLRank o2) {
-                return Double.compare(o2.rank, o1.rank); // Sắp xếp giảm dần theo rank
+            // 4. Lọc chỉ các node là KOL và sắp xếp theo PageRank
+            System.out.println("Filtering and processing KOL results...");
+            List<Node> rankedNodes = pageRank.getRankedNodes();
+
+            // Chỉ lấy các node là KOL
+            List<KOLRank> kolRanks = new ArrayList<>();
+            int rankIndex = 1;
+            for (Node node : rankedNodes) {
+                if (node.getType().equalsIgnoreCase("KOL")) { // Kiểm tra node có phải là KOL
+                    kolRanks.add(new KOLRank(rankIndex++, node.getId(), ranks.get(node)));
+                }
             }
-        });
-        
-        String outputFile = "kol_ranks.csv";
-        RankSaver.saveToCSV(kolRankList, outputFile);
+
+            // 5. Lưu kết quả vào file JSON
+            System.out.println("\nSaving PageRank results to JSON...");
+            DataManager<KOLRank> rankManager = new DataManagerJson<>(outputFilePath, KOLRank.class);
+            rankManager.writeData(kolRanks);
+            System.out.println("PageRank results saved to " + outputFilePath);
+
+            // 6. In kết quả ra màn hình
+//            System.out.println("\nTop KOLs by PageRank:");
+//            kolRanks.forEach(kol -> System.out.printf("Rank %d: %s - PageRank: %.6f%n",
+//                    kol.getRankIndex(), kol.getUsername(), kol.getScore()));
+
+        } catch (IOException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
     }
 }

@@ -1,13 +1,25 @@
 package pagerank;
 
-//Class KOLRank được tái sử dụng từ hàm main
 public class KOLRank {
-    String username;
-    double rank;
+    private int rankIndex;  // Thứ hạng của KOL
+    private String username;  // Tên KOL
+    private double score;  // Giá trị PageRank của KOL
 
-    public KOLRank(String username, double rank) {
+    public KOLRank(int rankIndex, String username, double score) {
+        this.rankIndex = rankIndex;
         this.username = username;
-        this.rank = rank;
+        this.score = score;
+    }
+
+    public int getRankIndex() {
+        return rankIndex;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public double getScore() {
+        return score;
     }
 }
-
