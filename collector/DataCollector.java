@@ -262,11 +262,4 @@ public class DataCollector {
         this.password = password;
     }
 
-//    public static void main(String[] args) throws InterruptedException, IOException {
-//        DataCollector collector = new DataCollector("ThnhCaoHuy","caohuythinh@gmail.com", "mancity1st");
-//        collector.getUserData(3, 2);
-//        // collector.filterKOL(100000);
-//        // collector.getKOLData("1", ThnhCaoHuy","caohuythinh@gmail.com", "mancity1st", 10, 10, 5, 5, 5);
-//        collector.getRankKOL();
-//    }
 }

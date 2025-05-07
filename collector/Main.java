@@ -14,7 +14,7 @@ public class Main {
         AutomationTool automationTool = new SeleniumAutomationTool(10);
         automationTool.open();
         SocialMediaPlatform twitterPlatform = new TwitterPlatform(automationTool);
-        twitterPlatform.login(Arrays.asList("ThnhCaoHuy", "caohuythinh@gmail.com", "mancity1st"));
+        twitterPlatform.login(Arrays.asList()); // Nhap tai khoan
         // List<String> id = twitterPlatform.getPostIds("blockchain", 3, 1);
         try {
             List<String> commenter = twitterPlatform.getReposters("flow_blockchain", "1869168385759842653", 20);
