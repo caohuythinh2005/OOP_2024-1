@@ -194,7 +194,7 @@ public class SeleniumAutomationTool implements AutomationTool {
     public void sendEnter(Object element) {
         try {
             if (element instanceof WebElement) {
-                ((WebElement) element).sendKeys(Keys.ENTER);
+                ((WebElement) element).sendKeys(org.openqa.selenium.Keys.ENTER);
             }
         } catch (Exception e) {
             System.err.println("Error sending enter: " + e.getMessage());

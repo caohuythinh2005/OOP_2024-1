@@ -26,6 +26,9 @@ import socialmedia.TwitterPlatform;
 import java.io.*;
 import java.util.*;
 
+import javax.swing.table.TableColumn;
+import javax.swing.text.TableView;
+
 public class TwitterAutotake extends Application {
 
     private String username;
@@ -109,7 +112,7 @@ public class TwitterAutotake extends Application {
         //Giao diện bước 4
         Button backBox1=new Button("Back");
         Button exitButton=new Button("Finish");
-        Button importFile=new Button("Import data file");
+        Button exportFile=new Button("Save data file");
         ButtonBoxFactory buttonBoxFactory4 = new ButtonBoxFactory();
         HBox finalBox = buttonBoxFactory4.createButtonBox(backBox1, exitButton);
 
@@ -136,32 +139,22 @@ public class TwitterAutotake extends Application {
 
         VBox step4=new VBox(10);
         step4.setPadding(new Insets(20));
-        step4.getChildren().addAll(new Label("Ranked KOLs"),finalTable,importFile,finalBox);
+        step4.getChildren().addAll(new Label("Ranked KOLs"),finalTable,exportFile,finalBox);
 
-        importFile.setOnAction(event -> {
+        exportFile.setOnAction(event -> {
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Import Ranked KOLs");
-            fileChooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("JSON Files", "*.json")
-            );
+            fileChooser.setTitle("Save File");
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+            File destFile = fileChooser.showSaveDialog(primaryStage);
 
-            File selectedFile = fileChooser.showOpenDialog(primaryStage);
-            if (selectedFile != null) {
-                try {
-                    // Đọc dữ liệu từ tệp JSON
-                    DataManager<RankedKOL> dataManager = new DataManagerJson<>(selectedFile.getAbsolutePath(), RankedKOL.class);
-                    List<RankedKOL> importedRankedKOLs = dataManager.readData();
-
-                    // Cập nhật danh sách hiển thị trong bảng
-                    rankedList.clear();
-                    rankedList.addAll(importedRankedKOLs);
-
-                    showAlert("Success", "Ranked KOLs imported successfully!");
+            if (destFile != null) {
+                try (InputStream in = new FileInputStream("src\\resource\\kol_data.json");
+                     OutputStream out = new FileOutputStream(destFile)) {
+                    in.transferTo(out); // Java 9+ API for stream copy
+                    System.out.println("File saved to: " + destFile.getAbsolutePath());
                 } catch (IOException e) {
-                    showAlert("Error", "Failed to import file: " + e.getMessage());
+                    System.err.println("Error saving file: " + e.getMessage());
                 }
-            } else {
-                showAlert("Info", "No file selected.");
             }
         });
 
@@ -209,7 +202,7 @@ public class TwitterAutotake extends Application {
             collector.setEmail(email);
             collector.setPassword(password);
             try {
-                collector.getUserData(3, 2);
+                collector.getUserData(50, 50);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
@@ -268,7 +261,7 @@ public class TwitterAutotake extends Application {
                 throw new RuntimeException(e);
             }
             try {
-                collector.getKOLData("1", 3, 1, 1, 1, 1);
+                collector.getKOLData("1", 80, 80, 20, 20, 20);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
@@ -309,7 +302,7 @@ public class TwitterAutotake extends Application {
             //Chạy hàm lấy followers rồi pagerank
 
             try {
-                collector.getKOLData("0", 3, 1, 1, 1, 1);
+                collector.getKOLData("0", 80, 80, 20, 20, 20);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {
